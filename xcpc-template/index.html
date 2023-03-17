@@ -16,24 +16,23 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Computer Network  introduction dominant model : bidirectional, reliable byte stream connection   http: hypertext transfer protocol : designed to be a document centric way for programs to communicate.">
+    <meta name="description" content="icpc模板   	      	     algorithm-template  Competitive Programming template   basic algorithm  [x] 双指针 [x] 离散化，去重 [x] 前缀和与差分 [x] 二分 [x] 单调栈 [x] 单调队列 [x] 尺取法 [ ] 归并排序，快速排序，第k小 [x] 树的中心 [x] 拓扑排序   math">
 <meta property="og:type" content="article">
-<meta property="og:title" content="cs144-note1">
-<meta property="og:url" content="https://catch22.club/cs144-note1/index.html">
+<meta property="og:title" content="xcpc template">
+<meta property="og:url" content="https://catch22.club/xcpc-template/index.html">
 <meta property="og:site_name" content="Catch22&#39;s Blog">
-<meta property="og:description" content="Computer Network  introduction dominant model : bidirectional, reliable byte stream connection   http: hypertext transfer protocol : designed to be a document centric way for programs to communicate.">
+<meta property="og:description" content="icpc模板   	      	     algorithm-template  Competitive Programming template   basic algorithm  [x] 双指针 [x] 离散化，去重 [x] 前缀和与差分 [x] 二分 [x] 单调栈 [x] 单调队列 [x] 尺取法 [ ] 归并排序，快速排序，第k小 [x] 树的中心 [x] 拓扑排序   math">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://catch22.club/img/cs144/OSI-model.png">
-<meta property="article:published_time" content="2022-05-09T14:35:22.000Z">
-<meta property="article:modified_time" content="2023-03-14T08:21:05.109Z">
+<meta property="og:image" content="https://catch22.club/img/icpc-algorithm-template/icpc-template.png">
+<meta property="article:published_time" content="2022-03-17T15:38:14.000Z">
+<meta property="article:modified_time" content="2023-03-17T16:18:30.367Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="ComputerNetwork">
-<meta property="article:tag" content="cs144">
+<meta property="article:tag" content="icpc">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://catch22.club/img/cs144/OSI-model.png">
+<meta name="twitter:image" content="https://catch22.club/img/icpc-algorithm-template/icpc-template.png">
   
   
-  <title>cs144-note1 - Catch22&#39;s Blog</title>
+  <title>xcpc template - Catch22&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -167,7 +166,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="cs144-note1">
+            <span class="h2" id="subtitle" title="xcpc template">
               
             </span>
 
@@ -177,8 +176,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2022-05-09 22:35" pubdate>
-        2022年5月9日 晚上
+      <time datetime="2022-03-17 23:38" pubdate>
+        2022年3月17日 晚上
       </time>
     </span>
   
@@ -188,7 +187,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      3.1k 字
+      810 字
     </span>
   
 
@@ -197,7 +196,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      18 分钟
+      5 分钟
     </span>
   
 
@@ -234,138 +233,120 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">cs144-note1</h1>
+            <h1 style="display: none">xcpc template</h1>
             
               <p class="note note-info">
                 
-                  本文最后更新于：3 天前
+                  本文最后更新于：42 分钟前
                 
               </p>
             
             <div class="markdown-body">
-              <h1 id="computer-network"><a class="markdownIt-Anchor" href="#computer-network"></a> Computer Network</h1>
-<h2 id="introduction"><a class="markdownIt-Anchor" href="#introduction"></a> introduction</h2>
-<p>dominant model : bidirectional, reliable byte stream connection</p>
+              <h2 id="icpc模板"><a class="markdownIt-Anchor" href="#icpc模板"></a> icpc模板</h2>
+
+
+	<div class="row">
+    <embed src="../img/icpc-algorithm-template/catch22-algorithm-template.pdf" width="100%" height="550" type="application/pdf">
+	</div>
+
+
+
+<h1 id="algorithm-template"><a class="markdownIt-Anchor" href="#algorithm-template"></a> algorithm-template</h1>
+<blockquote>
+<p>Competitive Programming template</p>
+</blockquote>
+<h2 id="basic-algorithm"><a class="markdownIt-Anchor" href="#basic-algorithm"></a> basic algorithm</h2>
 <ul>
-<li>
-<p><strong>http</strong>: hypertext transfer protocol : designed to be a document centric way for programs to communicate.<br />
-Client  —&gt;  Server  model</p>
-</li>
-<li>
-<p><strong>Bit-Torrent</strong>: (peer-to-peer model) a client requests document from other clients, a single client can request from many others.<br />
-these collections of collaborating clients are called <strong>swarms</strong><br />
-when a client wants to downloads a file, it first find <code>torrent</code>, usually using www and download using http.<br />
-<strong>torrent</strong> file describes information about data file, also tells bit-torrent about the <strong>tracker</strong> (a node keeps track names of clients of the swarm)</p>
-</li>
-<li>
-<p><strong>skype</strong>: client &lt;–NAT–&gt;client   two clients request data from each other</p>
-<p><em>NAT</em> : network address translator<br />
-if you’re <em>behind a NAT</em>, you can open connections out to the internet, but other nodes on the internet can’t easily open connections to you.</p>
-</li>
+<li>[x] 双指针</li>
+<li>[x] 离散化，去重</li>
+<li>[x] 前缀和与差分</li>
+<li>[x] 二分</li>
+<li>[x] 单调栈</li>
+<li>[x] 单调队列</li>
+<li>[x] 尺取法</li>
+<li>[ ] 归并排序，快速排序，第k小</li>
+<li>[x] 树的中心</li>
+<li>[x] 拓扑排序</li>
 </ul>
-<h2 id="the-4-layer-internet-model"><a class="markdownIt-Anchor" href="#the-4-layer-internet-model"></a> The 4 layer Internet Model</h2>
-<h3 id="network-layer-and-link-layer"><a class="markdownIt-Anchor" href="#network-layer-and-link-layer"></a> Network layer and link layer</h3>
-<img src = "../img/cs144/4LayerModel.png" align="left" width="300px" height="430"/>
-<span style="float:left">
-</span> The Internet is made up of `event hosts`, `links` and `routers`. 
-<p>data is delivered in <strong>packets</strong><br />
-a packet is a self-contained unit consisting of the data we want to be delivered.</p>
-<p>link layer’s job is  to carry the data over one link  at a time.<br />
-<code>ethernet</code> and <code>wifi</code> --&gt; two examples of different links layers</p>
-<p>Network layer’s job is to deliver packets end to end across the internet.<br />
-<strong>a packet is a collection data with header</strong>.<br />
-<img src = "../img/cs144/packet.png" align="right" width="380" height ="100px"/></p>
-<p>network layer packet are called <code>datagram</code>.</p>
-<p><img src="../img/cs144%5CNetwork_link.png" srcset="/img/loading.gif" lazyload alt="" /></p>
-<h3 id="the-network-layer-is-special"><a class="markdownIt-Anchor" href="#the-network-layer-is-special"></a> The network layer  is “special”</h3>
-<p>we must use the internet Protocol (IP)</p>
+<h2 id="math"><a class="markdownIt-Anchor" href="#math"></a> math</h2>
 <ul>
-<li>IP makes a best-effort attempt to deliver our datagrams to the other end. <strong>But it make no promise</strong></li>
-<li>IP datagrams can get lost, delivered out of order, and be corrupted. <strong>No guarantees</strong>.</li>
+<li>[x] 素数，筛素数，素性测试， 反素数</li>
+<li>[x] 质因数分解，预处理质因数</li>
+<li>[x] 欧拉函数</li>
+<li>[x] 组合数</li>
+<li>[x] 拓展欧几里得，线性同余方程</li>
+<li>[ ] 中国剩余定理</li>
+<li>[x] 容斥原理</li>
+<li>[x] 高斯消元，高斯异或</li>
+<li>[x] 矩阵乘法</li>
+<li>[ ] 博弈论，Nim游戏</li>
+<li>[x] 莫比乌斯反演</li>
+<li>[x] BSGS</li>
+<li>[x] FFT</li>
+<li>[ ] 生成函数</li>
+<li>[ ] 线性基</li>
 </ul>
-<h3 id="transport-layer"><a class="markdownIt-Anchor" href="#transport-layer"></a> Transport layer</h3>
-<p>the most common transport layer is <strong>TCP</strong> (transmission control protocol)</p>
+<h2 id="date-strcture"><a class="markdownIt-Anchor" href="#date-strcture"></a> date strcture</h2>
 <ul>
-<li>guarantee correct in-order delivery of data</li>
+<li>[x] 并查集</li>
+<li>[x] Sparse table</li>
+<li>[x] Trie, 01Trie</li>
+<li>[x] 树状数组</li>
+<li>[x] 线段树，扫描线</li>
+<li>[x] 树链剖分</li>
+<li>[x] 可持久化线段树，kth number, 主席树</li>
+<li>[ ] splay</li>
+<li>[ ] 分块</li>
+<li>[x] 莫队</li>
+<li>[ ] 点分治</li>
+<li>[ ] kdtree</li>
 </ul>
-<p>some applications doesn’t need reliable delivery, it can use <strong>UDP</strong> (user datagram protocol).</p>
+<h2 id="graph"><a class="markdownIt-Anchor" href="#graph"></a> Graph</h2>
 <ul>
-<li>an alternative transport layer that bundles up application data and hands it to the network layer</li>
-<li>it offers no delivery guarantees at all</li>
+<li>[x] Floyd</li>
+<li>[x] bellman-ford, spfa，判负环</li>
+<li>[x] dijkstra， 拆点</li>
+<li>[x] 分层图最短路</li>
+<li>[x] 差分约束</li>
+<li>[x] 最小生成树 prim, kruskal</li>
+<li>[x] 瓶颈生成树</li>
+<li>[x] kruskal重构树</li>
+<li>[x] lca</li>
+<li>[x] 二分图匹配</li>
+<li>[ ] 欧拉回路欧拉路径</li>
+<li>[x] 强连通分量</li>
+<li>[x] 2-sat</li>
+<li>[ ] 网络流相关</li>
 </ul>
-<h3 id="application"><a class="markdownIt-Anchor" href="#application"></a> Application</h3>
-<p>they have their own protocol to define the syntax and semantics of data flowing between two end points<br />
-(e.g. http, bit-torrent)</p>
-<h3 id="others"><a class="markdownIt-Anchor" href="#others"></a> others</h3>
-<img src = "../img/cs144/IP_is_thin.png" width="700px" height="350"/>
-<img src = "../img/cs144/OSI-model.png" width="700px" height="350"/>
-<h2 id="ip-service-model"><a class="markdownIt-Anchor" href="#ip-service-model"></a> IP Service model</h2>
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>behavior</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Datagram</td>
-<td>Individually routed packets.</td>
-</tr>
-<tr>
-<td>Unreliable</td>
-<td>packet might be dropped</td>
-</tr>
-<tr>
-<td>Best effort</td>
-<td>only if necessary</td>
-</tr>
-<tr>
-<td>Connectionless</td>
-<td>No per-flow state.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>IP is &quot;simple&quot;</strong></p>
+<h2 id="string"><a class="markdownIt-Anchor" href="#string"></a> string</h2>
 <ul>
-<li>faster, lower cost to build and maintain</li>
-<li>The end-to-end principle</li>
-<li>allows a variety of reliable (or unreliable) service to be built on top</li>
-<li>make very few assumptions about link layer</li>
+<li>[x] 字符串hash</li>
+<li>[x] KMP， 前缀函数</li>
+<li>[x] Z-algorithm</li>
+<li>[x] ac自动机</li>
+<li>[x] SA</li>
+<li>[x] SAM</li>
 </ul>
-<p><strong>IP Service Model</strong></p>
-<ol>
-<li>Tried to prevent packets looping forever<br />
-add a hop count field in the header of every datagram (<code>ttl</code>:time to live), start at a number like 128, decremented by every router passes through, when it reaches 0, IP think it be stuck in a loop then drop it.</li>
-<li>will fragment packets if they are too long.<br />
-bc most links have a limit on the size of packets.(ethernet – 1500bytes)</li>
-<li>uses a header checksum to reduce chances of delivering datagram to wrong destination.</li>
-<li>allows for new version of IP
+<h2 id="dp"><a class="markdownIt-Anchor" href="#dp"></a> dp</h2>
 <ul>
-<li>IPv4     32 bit addresses</li>
-<li>IPv6     128 bit addresses</li>
+<li>[x] 01pack, 完全背包，多重背包及优化，分组背包</li>
+<li>[x] 线性dp, LCS, LIS, 编辑距离</li>
+<li>[x] 区间dp 字符串压缩</li>
+<li>[x] 数位dp</li>
+<li>[ ] 状压dp</li>
+<li>[x] 树形dp</li>
+<li>[x] 基环树dp</li>
+<li>[x] 单调队列优化dp</li>
+<li>[ ] 斜率优化dp</li>
 </ul>
-</li>
-<li>allows for new options to be added to header</li>
-</ol>
-<img src = "../img/cs144/IPv4-datagram.png"  width="500px" />
-<h2 id="life-of-a-packet"><a class="markdownIt-Anchor" href="#life-of-a-packet"></a> Life of a Packet</h2>
-<h3 id="three-way-handshake"><a class="markdownIt-Anchor" href="#three-way-handshake"></a> three-way handshake</h3>
-<ol>
-<li>
-<p>Client -----sends a synchronized message(同步信息)-----&gt; Server   (synchronize, <strong>SYN</strong>)</p>
-</li>
-<li>
-<p>Server -----responds with a synchronized message and also acknowledges the client synchronize----&gt; Client   (synchronize and acknowledge, <strong>SYN/ACK</strong>)</p>
-</li>
-<li>
-<p>Client -----responds by acknowledging the server synchronized ----&gt; Server   (acknowledge, <strong>ACK</strong>)</p>
-</li>
-</ol>
-<p>IP addressed:  like computer addresses.<br />
-TCP port: tells which applications to deliver data to.</p>
-<p>Web Server usually run on tcp port 80.</p>
-<p><img src="../img/cs144/inside-the-stream.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h2 id="geometry"><a class="markdownIt-Anchor" href="#geometry"></a> Geometry</h2>
+<ul>
+<li>[ ] 常用模板</li>
+<li>[ ] 二维凸包</li>
+</ul>
+<blockquote>
+<p>github地址 <a target="_blank" rel="noopener" href="https://github.com/caaatch22/algorithm-template">https://github.com/caaatch22/algorithm-template</a></p>
+</blockquote>
 
             </div>
             <hr>
@@ -376,9 +357,7 @@ TCP port: tells which applications to deliver data to.</p>
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/ComputerNetwork/">ComputerNetwork</a>
-                    
-                      <a class="hover-with-bg" href="/tags/cs144/">cs144</a>
+                      <a class="hover-with-bg" href="/tags/icpc/">icpc</a>
                     
                   </div>
                 
@@ -395,21 +374,15 @@ TCP port: tells which applications to deliver data to.</p>
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/CMU15445-project1-Buffer-Pool-Manager/">
+                      <a href="/cs144-note1/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">CMU15445-project1 Buffer Pool Manager</span>
+                        <span class="hidden-mobile">cs144-note1</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
-                    
-                      <a href="/xcpc-template/">
-                        <span class="hidden-mobile">xcpc template</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
                     
                   </article>
                 </div>
