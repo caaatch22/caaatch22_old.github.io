@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Catch22&#39;s Blog</title>
+  <icon>https://catch22.club/icon.png</icon>
+  
+  <link href="https://catch22.club/atom.xml" rel="self"/>
+  
+  <link href="https://catch22.club/"/>
+  <updated>2023-05-20T10:05:26.944Z</updated>
+  <id>https://catch22.club/</id>
+  
+  <author>
+    <name>John Doe</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>C++ CRTP</title>
+    <link href="https://catch22.club/C-CRTP/"/>
+    <id>https://catch22.club/C-CRTP/</id>
+    <published>2023-05-20T09:33:40.000Z</published>
+    <updated>2023-05-20T10:05:26.944Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;原先只是了解这个名词，想着C&lt;ins&gt;20后静态多态直接用</summary>
+        
+      
+    
+    
+    
+    
+    <category term="C++ idioms" scheme="https://catch22.club/tags/C-idioms/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>轻量级高并发网络库+httpserver</title>
+    <link href="https://catch22.club/%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E7%BD%91%E7%BB%9C%E5%BA%93-httpserver/"/>
+    <id>https://catch22.club/%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E7%BD%91%E7%BB%9C%E5%BA%93-httpserver/</id>
+    <published>2023-03-01T11:34:21.000Z</published>
+    <updated>2023-05-20T07:38:45.262Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;img src=&quot;../img/FalconLink/falcon-black.png&quot; width=&quot;100%&quot; height=&quot;75%&quot;&gt;
+&lt;blockquote&gt;
+&lt;p&gt;本博客部署在两个服务器上，其中一个的 HTTP 服务就是由本文介绍的 FalconLink</summary>
+        
+      
+    
+    
+    
+    
+    <category term="ComputerNetwork" scheme="https://catch22.club/tags/ComputerNetwork/"/>
+    
+    <category term="FalconLink" scheme="https://catch22.club/tags/FalconLink/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CMU15445-project3 Query Excution</title>
+    <link href="https://catch22.club/CMU15445-project3-Query-Execution/"/>
+    <id>https://catch22.club/CMU15445-project3-Query-Execution/</id>
+    <published>2023-01-17T15:45:12.000Z</published>
+    <updated>2023-03-14T08:03:43.895Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;overview&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#overview&quot;&gt;&lt;/a&gt; Overview&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;在这次实验写完后，我们已经能使用bustub-shell完成执行 sql</summary>
+        
+      
+    
+    
+    
+    
+    <category term="database" scheme="https://catch22.club/tags/database/"/>
+    
+    <category term="cmu15445" scheme="https://catch22.club/tags/cmu15445/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>算法竞赛中的Wavelet Tree</title>
+    <link href="https://catch22.club/%E7%AE%97%E6%B3%95%E7%AB%9E%E8%B5%9B%E4%B8%AD%E7%9A%84Wavelet-Tree/"/>
+    <id>https://catch22.club/%E7%AE%97%E6%B3%95%E7%AB%9E%E8%B5%9B%E4%B8%AD%E7%9A%84Wavelet-Tree/</id>
+    <published>2023-01-10T08:18:32.000Z</published>
+    <updated>2023-03-12T05:29:01.633Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;wavelet-tree-for-competitive-programming&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#wavelet-tree-for-competitive-programming&quot;&gt;&lt;/a&gt;</summary>
+        
+      
+    
+    
+    
+    
+    <category term="icpc" scheme="https://catch22.club/tags/icpc/"/>
+    
+    <category term="data-structure" scheme="https://catch22.club/tags/data-structure/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CMU15445-project2 Concurrent B+ tree</title>
+    <link href="https://catch22.club/CMU15445-project2-Concurrent-B-tree/"/>
+    <id>https://catch22.club/CMU15445-project2-Concurrent-B-tree/</id>
+    <published>2022-12-27T15:45:12.000Z</published>
+    <updated>2023-03-12T05:28:57.729Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;overview&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#overview&quot;&gt;&lt;/a&gt; Overview&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;这个实验应该是最难的一个实验了。。。（感觉和Project 4 ——</summary>
+        
+      
+    
+    
+    
+    
+    <category term="database" scheme="https://catch22.club/tags/database/"/>
+    
+    <category term="cmu15445" scheme="https://catch22.club/tags/cmu15445/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CMU15445-project1 Buffer Pool Manager</title>
+    <link href="https://catch22.club/CMU15445-project1-Buffer-Pool-Manager/"/>
+    <id>https://catch22.club/CMU15445-project1-Buffer-Pool-Manager/</id>
+    <published>2022-12-22T07:37:34.000Z</published>
+    <updated>2023-03-12T05:29:19.166Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;buffer-pool-manager&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#buffer-pool-manager&quot;&gt;&lt;/a&gt; Buffer Pool</summary>
+        
+      
+    
+    
+    
+    
+    <category term="database" scheme="https://catch22.club/tags/database/"/>
+    
+    <category term="cmu15445" scheme="https://catch22.club/tags/cmu15445/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>cs144-note1</title>
+    <link href="https://catch22.club/cs144-note1/"/>
+    <id>https://catch22.club/cs144-note1/</id>
+    <published>2022-05-09T14:35:22.000Z</published>
+    <updated>2023-03-14T08:21:05.109Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;computer-network&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#computer-network&quot;&gt;&lt;/a&gt; Computer Network&lt;/h1&gt;
+&lt;h2 id=&quot;introduction&quot;&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    
+    <category term="ComputerNetwork" scheme="https://catch22.club/tags/ComputerNetwork/"/>
+    
+    <category term="cs144" scheme="https://catch22.club/tags/cs144/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>xcpc template</title>
+    <link href="https://catch22.club/xcpc-template/"/>
+    <id>https://catch22.club/xcpc-template/</id>
+    <published>2022-03-17T15:38:14.000Z</published>
+    <updated>2023-04-14T01:50:43.119Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;icpc模板&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#icpc模板&quot;&gt;&lt;/a&gt; icpc模板&lt;/h2&gt;
+
+
+	&lt;div class=&quot;row&quot;&gt;
+    &lt;embed</summary>
+        
+      
+    
+    
+    
+    
+    <category term="icpc" scheme="https://catch22.club/tags/icpc/"/>
+    
+  </entry>
+  
+</feed>
