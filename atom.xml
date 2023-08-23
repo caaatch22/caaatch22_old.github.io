@@ -6,7 +6,7 @@
   <link href="https://catch22.world/atom.xml" rel="self"/>
   
   <link href="https://catch22.world/"/>
-  <updated>2023-05-20T10:05:26.944Z</updated>
+  <updated>2023-08-23T15:02:26.679Z</updated>
   <id>https://catch22.world/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>parallel-hashmap</title>
+    <link href="https://catch22.world/parallel-hashmap/"/>
+    <id>https://catch22.world/parallel-hashmap/</id>
+    <published>2023-08-23T13:23:15.000Z</published>
+    <updated>2023-08-23T15:02:26.679Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;phmap_map&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#phmap_map&quot;&gt;&lt;/a&gt; phmap_map&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;众所周知，C++标准库的</summary>
+        
+      
+    
+    
+    
+    
+    <category term="DataStructure" scheme="https://catch22.world/tags/DataStructure/"/>
+    
+    <category term="opensource" scheme="https://catch22.world/tags/opensource/"/>
+    
+  </entry>
   
   <entry>
     <title>C++ CRTP</title>
