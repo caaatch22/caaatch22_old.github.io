@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://catch22.world/img/memory-model/title-graph.png">
 <meta property="article:published_time" content="2023-09-01T07:51:19.000Z">
-<meta property="article:modified_time" content="2023-09-11T15:29:23.031Z">
+<meta property="article:modified_time" content="2023-09-11T16:22:40.487Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="C++ memory order">
 <meta property="article:tag" content="Computer Architecture">
@@ -189,7 +189,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      5.1k 字
+      5.9k 字
     </span>
   
 
@@ -198,7 +198,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      29 分钟
+      33 分钟
     </span>
   
 
@@ -239,7 +239,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：2 分钟前
+                  本文最后更新于：几秒前
                 
               </p>
             
@@ -286,9 +286,9 @@ answer: l1: 1ns, l2: 5ns, l3: 50~100ns, main memory: 200ns</p>
 </thead>
 <tbody>
 <tr>
-<td>x = 1 <code>&lt;br&gt;</code> y’ = y</td>
-<td>y = 1 <code>&lt;br&gt;</code> x’ = x</td>
-<td>x = 0 <code>&lt;br&gt;</code> y = 0 <code>&lt;br&gt;</code> Spawn thread 1, 2 <code>&lt;br&gt;</code> Wait for threads</td>
+<td>x = 1 <br> y’ = y</td>
+<td>y = 1 <br> x’ = x</td>
+<td>x = 0 <br> y = 0 <br> Spawn thread 1, 2 <br> Wait for threads</td>
 </tr>
 </tbody>
 </table>
@@ -299,8 +299,9 @@ answer: l1: 1ns, l2: 5ns, l3: 50~100ns, main memory: 200ns</p>
 <li>x = 1, y = 0;</li>
 </ol>
 <p>而不会出现 x = 0; y = 0的情况。</p>
+<p>SC模型很美好，分析起来简单，心智负担小。但是为了保证顺序一致性，他付出了一定的性能代价。所以，并没有哪个成熟的体系结构真正使用SC模型。现代体系结构纷纷为了性能而做出了不同程度的妥协。</p>
 <h3 id="x86-tso"><a class="markdownIt-Anchor" href="#x86-tso"></a> x86-TSO</h3>
-<p>x86-TSO(Total Store Order)，它比SC更<em>弱</em>，但仍是现代CPU的约束最强的内存模型其中之一。tso的架构可以用以下抽象来代替：<br />
+<p>x86-TSO(Total Store Order)，它比SC更<em>弱</em>，但仍是现代CPU约束最强的内存模型其中之一。tso的架构可以用以下抽象来代替：<br />
 <img src="../img/memory-model/TSO-model.png" srcset="/img/loading.gif" lazyload alt="TSO-model" /><br />
 注意，这并非真实的x86的架构(毕竟连cache都没有)，只是x86-tso模型保证我们得到这样的抽象。这里的store buffer(或者叫write buffer)也不一定对应着硬件上的store buffer。它也可以是cache hierarchy的一部分，他们之间有一致性协议进行约束来保证上图中的效果。</p>
 <p>TSO模型最重要的几个特性：</p>
@@ -312,12 +313,12 @@ answer: l1: 1ns, l2: 5ns, l3: 50~100ns, main memory: 200ns</p>
 </ul>
 <p>在TSO下，对于上述表格中的问题，则可能出现 <code>x = 0, y = 0</code>的结果：<code>x = 1</code>与 <code>y = 1</code>都被放到store buffer上而未被flush到shared memory中。</p>
 <p>也就是说：<br />
-x86-TSO does not permit local reordering except of <strong>reads after writes to different addresses.</strong></p>
+x86-TSO does not permit local reordering <strong>except of reads after writes to different addresses.</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs assemble">thread 1, thread 2    可能会     thread 1, thread 2<br>write a,  write b    ————————&gt;   read b,   read a<br>read b,   read a                 write a,  write b<br></code></pre></td></tr></table></figure>
 <p>要解决这个问题也很简单，在write后加上mfence指令即可，它会将store buffer中的存储刷到shared memory中。<br />
 这也是TSO比SC理论性能更高的原因，它舍弃了一定的正确性，来减少每次写操作都flush store buffer的开销。</p>
 <blockquote>
-<p>fun fact: intel和amd从没承认过他们的x86一定符合x86-tso内存模型，但是他们进行过黑盒测试，结果证明了这一点。（就连设计者都无法reason出理论上的结果，而是通过测试证明的）</p>
+<p>fun fact: intel和amd从没承认过他们的x86一定符合x86-tso内存模型，但是他们进行过黑盒测试，结果证明了这一点。（就连设计者都难以reason出理论上的结果，而是通过测试证明的）</p>
 </blockquote>
 <h3 id="arm-and-power"><a class="markdownIt-Anchor" href="#arm-and-power"></a> ARM and POWER</h3>
 <p>Arm and power则有着更加宽松的内存模型。为了理解这样一台机器的行为，我们可以认为每个hardware thread都拥有自己的内存副本，如下图所示。所有内存副本和它们的interconnection（即除了线程以外的一切）的集合通常被称为<em>storage subsystem</em>。一个线程的写操作可能以<strong>任何顺序</strong>传播到其他线程，并且不同地址的写操作的传播可以任意交错，除非它们受到屏障或缓存一致性的限制。也可以将屏障视为从执行它们的硬件线程传播到每个其他线程的操作。<br />
@@ -379,9 +380,17 @@ POWER架构还提供了一个额外的“轻量级同步”指令，称为<code>
 <p><img src="../img/memory-model/acquire-barrier.png" srcset="/img/loading.gif" lazyload alt="acuire barrier" /></p>
 <p>在默认情况下，<code>std::atomic&lt;&gt;</code>相关函数总是选用<code>std::memory_order_seq_cst</code>，它能有效地帮我们避免错误。但是，我们既然都使用atomic而不是mutex了，自然是对性能有很高的要求。<br />
 <img src="../img/memory-model/memory-barriers-performance.png" srcset="/img/loading.gif" lazyload alt="memory barriers and performance" />，从上图中可以看出，<code>memory_order_relaxed</code>的行呢个和<code>non-atomic</code>几乎没有差别，而<code>seq_cst</code>则要慢许多。</p>
-<p>如果上面的表格看起来还是有点抽象，我们举几个常用的例子进行说明：</p>
+<p>另一方面，使用不同等级的memory order也能更好的表达你的程序的意图：</p>
 <h3 id="relax-model"><a class="markdownIt-Anchor" href="#relax-model"></a> relax-model</h3>
-<h3 id="release-acuqire-model"><a class="markdownIt-Anchor" href="#release-acuqire-model"></a> release-acuqire model</h3>
+<p>最典型的例子就是一个线程安全的计数器。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp">std::atomic&lt;<span class="hljs-type">size_t</span>&gt; counter;<br>counter.<span class="hljs-built_in">fetch_add</span>(<span class="hljs-number">1</span>, std::memory_order_relaxed);<br></code></pre></td></tr></table></figure>
+<p>你只是单纯的记录某件事情发生了几次。常用的还有智能指针中的引用计数的递增递减等</p>
+<h3 id="acuqire-release-model"><a class="markdownIt-Anchor" href="#acuqire-release-model"></a> acuqire-release model</h3>
+<p>如果代码改成：<code>counter.fetch_add(1, std::memory_order_release);</code>那么这个counter就极有可能是某个数组的下标：你对某一个数组append了一个数，然后你才将其<strong>release(发布)</strong>，告诉系统不允许将你对数组的append操作重排到counter增加之后；这样在其他线程中，其他线程就无法因为counter没更新而占有你已经append的位置。</p>
+<p>acuqire-release经常成对出现，因为他们共同表示了这样的一个模型：<br />
+<img src="../img/memory-model/acquire-release-protocal.png" srcset="/img/loading.gif" lazyload alt="acuqire-release protocal" /></p>
+<p>我们用一个非常简单的spinlock作为例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">spinlock</span> &#123;<br> <span class="hljs-keyword">public</span>:<br>  <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">lock</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">while</span>(flg_.<span class="hljs-built_in">exchang</span>(<span class="hljs-number">1</span>, std::memory_order_acquire))<br>        ;<br>  &#125;<br>  <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">unlock</span><span class="hljs-params">()</span> </span>&#123; flg_.<span class="hljs-built_in">store</span>(<span class="hljs-number">0</span>, std::memory_order_release); &#125;<br> <span class="hljs-keyword">private</span>:<br>  std::atomic&lt;<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span>&gt; flg_;<br>&#125;;<br><br>cretical section<br><br></code></pre></td></tr></table></figure>
 <h2 id="其他"><a class="markdownIt-Anchor" href="#其他"></a> 其他</h2>
 <ol>
 <li>
@@ -394,7 +403,10 @@ POWER架构还提供了一个额外的“轻量级同步”指令，称为<code>
 </li>
 <li></li>
 </ol>
-<p>关于 <code>std::atomic&lt;&gt;</code>，</p>
+<p><code>std::atomic&lt;&gt;</code>一定是无锁的吗？<strong>wrong!</strong></p>
+<ol start="3">
+<li>为什么atomic&lt;&gt;比mutex更高效？最终不都是依赖于硬件提供的barrier以及CAS, test and set等low level primitive吗？</li>
+</ol>
 
             </div>
             <hr>
