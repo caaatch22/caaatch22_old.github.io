@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://catch22.world/img/memory-model/title-graph.png">
 <meta property="article:published_time" content="2023-09-01T07:51:19.000Z">
-<meta property="article:modified_time" content="2023-09-11T14:15:55.967Z">
+<meta property="article:modified_time" content="2023-09-11T14:22:47.181Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="C++ memory order">
 <meta property="article:tag" content="Computer Architecture">
@@ -189,7 +189,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      3k 字
+      3.2k 字
     </span>
   
 
@@ -198,7 +198,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      17 分钟
+      18 分钟
     </span>
   
 
@@ -320,7 +320,7 @@ x86-TSO does not permit local reordering except of <strong>reads after writes to
 <p>fun fact: intel和amd从没承认过他们的x86一定符合x86-tso内存模型，但是他们进行过黑盒测试，结果证明了这一点。（就连设计者都无法reason出理论上的结果，而是通过测试证明的）</p>
 </blockquote>
 <h3 id="arm-and-power"><a class="markdownIt-Anchor" href="#arm-and-power"></a> ARM and POWER</h3>
-<p>Arm and power则有着更加宽松的内存模型。我们可以简单的把这种模型看成<br />
+<p>Arm and power则有着更加宽松的内存模型。为了理解这样一台机器的行为，我们可以认为每个hardware thread都拥有自己的内存副本，如下图所示。所有内存副本和它们的interconnection（即除了线程以外的一切）的集合通常被称为<em>storage subsystem</em>。一个线程的写操作可能以<strong>任何顺序</strong>传播到其他线程，并且不同地址的写操作的传播可以任意交错，除非它们受到屏障或缓存一致性的限制。也可以将屏障视为从执行它们的硬件线程传播到每个其他线程的操作。<br />
 <img src="../img/memory-model/ARM-model.png" srcset="/img/loading.gif" lazyload alt="Arm-Model" /></p>
 <p>（待施工…</p>
 <h2 id="c-memory-order"><a class="markdownIt-Anchor" href="#c-memory-order"></a> C++ memory order</h2>
