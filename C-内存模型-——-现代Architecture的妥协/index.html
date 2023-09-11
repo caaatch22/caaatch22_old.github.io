@@ -16,24 +16,24 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-    <meta name="description" content="本博客部署在两个服务器上，其中一个的 HTTP 服务就是由本文介绍的 FalconLink 提供。你可以通过IP地址 121.4.49.170:20080 尝试访问。 项目地址 https:&#x2F;&#x2F;github.com&#x2F;caaatch22&#x2F;FalconLink   Overview FalconLink是一个轻量级的高并发网络库。它封装了网络编程套接字API，将其抽象成一个易用，可拓展框架。用户只">
+    <meta name="description" content="优化，引出内存模型；程序的执行顺序。 C++内存模型，atomic相关（cppcon介绍） TSO等   介绍 什么是内存模型(Memory Model)呢？这里介绍的内存模型并非C++对象的内存排布模型，而是一个非编程语言层面的概念。我们知道在C++11中，标准引入了 std::atomic&lt;&gt;原子对象，同时还引入了 123456memory_order_relaxedmemor">
 <meta property="og:type" content="article">
-<meta property="og:title" content="轻量级高并发网络库+httpserver">
-<meta property="og:url" content="https://catch22.world/%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E7%BD%91%E7%BB%9C%E5%BA%93-httpserver/index.html">
+<meta property="og:title" content="C++内存模型 —— 现代Architecture的妥协">
+<meta property="og:url" content="https://catch22.world/C-%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B-%E2%80%94%E2%80%94-%E7%8E%B0%E4%BB%A3Architecture%E7%9A%84%E5%A6%A5%E5%8D%8F/index.html">
 <meta property="og:site_name" content="Catch22&#39;s Blog">
-<meta property="og:description" content="本博客部署在两个服务器上，其中一个的 HTTP 服务就是由本文介绍的 FalconLink 提供。你可以通过IP地址 121.4.49.170:20080 尝试访问。 项目地址 https:&#x2F;&#x2F;github.com&#x2F;caaatch22&#x2F;FalconLink   Overview FalconLink是一个轻量级的高并发网络库。它封装了网络编程套接字API，将其抽象成一个易用，可拓展框架。用户只">
+<meta property="og:description" content="优化，引出内存模型；程序的执行顺序。 C++内存模型，atomic相关（cppcon介绍） TSO等   介绍 什么是内存模型(Memory Model)呢？这里介绍的内存模型并非C++对象的内存排布模型，而是一个非编程语言层面的概念。我们知道在C++11中，标准引入了 std::atomic&lt;&gt;原子对象，同时还引入了 123456memory_order_relaxedmemor">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://catch22.world/img/FalconLink/falcon-black.png">
-<meta property="article:published_time" content="2023-03-01T11:34:21.000Z">
-<meta property="article:modified_time" content="2023-05-20T07:38:45.262Z">
+<meta property="og:image" content="https://catch22.world/img/memory-model/title-graph.png">
+<meta property="article:published_time" content="2023-09-01T07:51:19.000Z">
+<meta property="article:modified_time" content="2023-09-11T14:10:04.309Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="ComputerNetwork">
-<meta property="article:tag" content="FalconLink">
+<meta property="article:tag" content="C++ memory order">
+<meta property="article:tag" content="Computer Architecture">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://catch22.world/img/FalconLink/falcon-black.png">
+<meta name="twitter:image" content="https://catch22.world/img/memory-model/title-graph.png">
   
   
-  <title>轻量级高并发网络库+httpserver - Catch22&#39;s Blog</title>
+  <title>C++内存模型 —— 现代Architecture的妥协 - Catch22&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -168,7 +168,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="轻量级高并发网络库+httpserver">
+            <span class="h2" id="subtitle" title="C++内存模型 —— 现代Architecture的妥协">
               
             </span>
 
@@ -178,8 +178,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2023-03-01 19:34" pubdate>
-        2023年3月1日 晚上
+      <time datetime="2023-09-01 15:51" pubdate>
+        2023年9月1日 下午
       </time>
     </span>
   
@@ -189,7 +189,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.1k 字
+      3k 字
     </span>
   
 
@@ -198,7 +198,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      12 分钟
+      17 分钟
     </span>
   
 
@@ -235,60 +235,99 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">轻量级高并发网络库+httpserver</h1>
+            <h1 style="display: none">C++内存模型 —— 现代Architecture的妥协</h1>
             
               <p class="note note-info">
                 
-                  本文最后更新于：4 个月前
+                  本文最后更新于：3 分钟前
                 
               </p>
             
             <div class="markdown-body">
-              <img src="../img/FalconLink/falcon-black.png" srcset="/img/loading.gif" lazyload width="100%" height="75%">
+              <p><img src="../img/memory-model/title-graph.png" srcset="/img/loading.gif" lazyload alt="一本简单介绍内存一致性的书" /></p>
+<ol>
+<li>优化，引出内存模型；程序的执行顺序。</li>
+<li>C++内存模型，atomic相关（cppcon介绍）</li>
+<li>TSO等</li>
+</ol>
+<h2 id="介绍"><a class="markdownIt-Anchor" href="#介绍"></a> 介绍</h2>
+<p>什么是内存模型(Memory Model)呢？这里介绍的内存模型并非<a target="_blank" rel="noopener" href="https://citeseerx.ist.psu.edu/document?repid=rep1&amp;type=pdf&amp;doi=160489e8b12cd9a44cbff0cd85fb6aa05437d1ac">C++对象的内存排布模型</a>，而是一个非编程语言层面的概念。我们知道在C++11中，标准引入了 <code>std::atomic&lt;&gt;</code>原子对象，同时还引入了</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><pre><code class="hljs cpp">memory_order_relaxed<br>memory_order_consume<br>memory_order_acquire<br>memory_order_release<br>memory_order_acq_rel<br>memory_order_seq_cst<br></code></pre></td></tr></table></figure>
+<p>这六种 <code>memory order</code>。引入可以让我们进行<strong>无锁编程</strong>，而如果你想要更高性能的程序，你就必须深挖这六种内存模型的含义并正确应用。（当然，在不显式指明memory order的情况下，你能保证获得正确的代码，但存在性能损失）</p>
+<h2 id="内存模型"><a class="markdownIt-Anchor" href="#内存模型"></a> 内存模型</h2>
+<p>在介绍C++ memory order之前，我们先回答另一个问题。<em>你的计算机执行的程序就是你写的程序吗? —— 显然不是的。</em></p>
+<p>原因也很简单，为了更高效的执行指令，编译器、CPU结构、缓存及其他硬件系统都会对指令进行增删，修改，重排。但要回答具体进行了什么样的修改，又是一个极其复杂的问题。或者说，整个现代体系结构，就是在保证程序正确性的前提下利用各种手段对程序优化。我们可以粗略的将其分成几个部分：</p>
+<ol>
+<li><strong>source code order:</strong> 程序员在源代码中指定的顺序</li>
+<li><strong>program code order:</strong> 基本上可以看成汇编/机器码的顺序，它可以由编译器优化后得到</li>
+<li><strong>execution code order:</strong> CPU执行指令顺序也不见得与汇编相同，不同CPU在执行相同机器码时任然存在优化空间。</li>
+<li><strong>perceived order/physical order:</strong> 最终的执行顺序。即便CPU按照某种确定指令执行，物理时间上的执行顺序仍然可能不同。例如，在超标量CPU中，一次可以fetch and decode多个指令，这些指令之间的物理执行顺序就是不确定的；由于不同层级缓存之间延时不同，以及缓存之间的通信需要等带来的不确定的执行顺序等</li>
+</ol>
+<p><img src="../img/memory-model/optimization-by-different-parts-of-computer.png" srcset="/img/loading.gif" lazyload alt="optimizations-by-compyter" /></p>
+<p>上图简要说明了你的源代码可能经历的优化步骤。</p>
+<p>这些优化的一个主要原因在于 掩盖memory access操作与CPU执行速度上的巨大鸿沟。如果没有cache，CPU每个访存指令都需要stall一两百个时钟周期，这是不可接受的。但是引入cache的同时又会带来 <code>cache coherence</code>等问题，这也是造成x初始为0，两个线程同时执行 <code>x++</code>，而x最终不一定为 <code>2</code>的元凶。<strong>而一个内存模型则对上述并发程序的同一块内存进行了一定的限制，它给出了在并发程序下，任意一组写操作时，可能读到的值。</strong> 不同体系结构(x86, arm, power…)通过不同的内存模型来保证程序的正确性。</p>
 <blockquote>
-<p>本博客部署在两个服务器上，其中一个的 HTTP 服务就是由本文介绍的 FalconLink 提供。你可以通过IP地址 121.4.49.170:20080 尝试访问。 项目地址 <a target="_blank" rel="noopener" href="https://github.com/caaatch22/FalconLink">https://github.com/caaatch22/FalconLink</a></p>
+<p>bonus question: 不同等级的cache latency？<br />
+answer: l1: 1ns, l2:5ns, l3:50~100ns, main memory: 200ns</p>
 </blockquote>
-<h2 id="overview"><a class="markdownIt-Anchor" href="#overview"></a> Overview</h2>
-<p><strong>FalconLink</strong>是一个轻量级的高并发网络库。它封装了网络编程套接字API，将其抽象成一个易用，可拓展框架。用户只需通过设置回调函数的形式注入业务逻辑。它同时也具有 HTTP 服务请求与解析的功能。</p>
-<p><img src="../img/FalconLink/falconlink-architecture.png" srcset="/img/loading.gif" lazyload alt="" /></p>
-<p>上图是FalconLink系统架构的一个简单概括性图示。</p>
+<h3 id="sequential-consistencysc"><a class="markdownIt-Anchor" href="#sequential-consistencysc"></a> Sequential Consistency(SC)</h3>
+<p>SC是最严格的内存模型，也被称作non-weak memory model。在该模型下，多线程程序执行的可做如下分析：对于每一步，随机选择一个线程，并执行该线程执行中的下一步（例如，按程序或编译的顺序）。重复这个过程，直到整个程序终止。这实际上等效于按照（程序或编译的）顺序执行所有线程的所有步骤，并以某种方式交错它们，从而产生所有步骤的单一总顺序。SC不允许重新排列线程的步骤。因此，每当访问对象时，都会检索该顺序中存储在对象中的最后一个值。（注意，内存模型中说的重新排列与编译器层面无关，编译器自然是可以讲没有data dependance的读写操作进行重排的，只要保证程序的正确性即可。内存模型中的重排指的是在硬件执行阶段，由于cache hierarchy等引发的一些问题导致指令物理执行顺序被改变）。</p>
+<p>也就是说，我们可以抽象出一个简单的内存结构：<br />
+<img src="../img/memory-model/SC-model.png" srcset="/img/loading.gif" lazyload alt="SC-model" /><br />
+在这种结构中，我们隐藏了cache与store buffer的存在，或者说SC协议允许我们无视这两个硬件。<br />
+那么，我们对于下面表格中的问题就有确定的答案：</p>
+<table>
+<thead>
+<tr>
+<th>Thread 1</th>
+<th>Thread 2</th>
+<th>main</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>x = 1 <code>&lt;br&gt;</code> y’ = y</td>
+<td>y = 1 <code>&lt;br&gt;</code> x’ = x</td>
+<td>x = 0 <code>&lt;br&gt;</code> y = 0 <code>&lt;br&gt;</code> Spawn thread 1, 2 <code>&lt;br&gt;</code> Wait for threads</td>
+</tr>
+</tbody>
+</table>
+<p>显然，在SC模型中最终的结果只可能是：</p>
+<ol>
+<li>x = 1, y = 1;</li>
+<li>x = 0, y = 1;</li>
+<li>x = 1, y = 0;</li>
+</ol>
+<p>而不会出现 x = 0; y = 0的情况。</p>
+<h3 id="x86-tso"><a class="markdownIt-Anchor" href="#x86-tso"></a> x86-TSO</h3>
+<p>x86-TSO(Total Store Order)，它比SC更<em>弱</em>，但仍是现代CPU的约束最强的内存模型其中之一。tso的架构可以用以下抽象来代替：<br />
+<img src="../img/memory-model/TSO-model.png" srcset="/img/loading.gif" lazyload alt="TSO-model" /><br />
+注意，这并非真实的x86的架构(毕竟连cache都没有)，只是x86-tso模型保证我们得到这样的抽象。这里的store buffer(或者叫write buffer)也不一定对应着硬件上的store buffer。它也可以是cache hierarchy的一部分，他们之间有一致性协议进行约束来保证上图中的效果。</p>
+<p>TSO模型最重要的几个特性：</p>
 <ul>
-<li>采用<strong>非阻塞socket</strong>配合<strong>边缘触发</strong>，及<em>one loop per thread</em>的主从 <code>reactor</code>设计</li>
-<li><code>Acceptor</code> 是专门用于处理接受新用户连接请求的模块。它守候在监听端口。收到请求后建立 <code>Connection</code> 分配给 EventLoop。</li>
-<li>FalconLink 将每个 TCP连接抽象成一个 <code>Connection</code>，一个 <code>Connection</code>对应一个连接 socket 套接字。用户可以为每一条Connection注册回调函数。</li>
-<li>每个 <code>EventLoop</code> 都拥有一个 <code>Poller</code>。 <code>Poller</code> 负责监听已连接的套接字，将有事件触发的连接反馈给 <code>EventLoop</code>。</li>
-<li><code>EventLoop</code>是该系统的核心组件, 每个都单独运行在一个线程中. 它从 <code>Poller</code> 中接收到有事件触发的用户连接后, 会获取并执行它们的回调函数.</li>
-<li><code>ThreadPool</code> 线程池管理着系统中有多少个 <code>EventLoop</code> 在运行，并调度线程，防止注册过多线程导致性能下降。</li>
-<li>支持 HTTP(GET,HEAD)请求的解析与回复，支持挂载静态 html 文件（本博客使用FalconLink的 HTTP 服务）</li>
-<li>实现异步logger</li>
+<li>store buffer是FIFO的，读取线程必须读取其自身最近缓冲的写操作，如果有的话，读取的地址与该写操作一致。否则，读取操作将从共享内存中满足。</li>
+<li>mfence 指令会清空该hardware thread的store buffer</li>
+<li>要执行一个带锁的指令，线程必须首先获取全局锁。在指令结束时，它会清空自己的store buffer并释放锁。当一个线程持有锁时，其他线程无法读取。这基本上意味着带锁的指令强制实现了顺序一致性。</li>
+<li>线程的可以在任何时间传播到共享内存中，除非另一个线程持有锁。</li>
 </ul>
-<h2 id="api"><a class="markdownIt-Anchor" href="#api"></a> API</h2>
-<p>使用falconlink，可以轻易且优雅的在20行内实现一个 <code>echo server</code>。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></div></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;falconlink.hpp&quot;</span></span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>  <span class="hljs-function">falconlink::InetAddr <span class="hljs-title">local_address</span><span class="hljs-params">(<span class="hljs-string">&quot;0.0.0.0&quot;</span>, <span class="hljs-number">8090</span>)</span></span>;<br>  <span class="hljs-function">falconlink::Server <span class="hljs-title">echo_server</span><span class="hljs-params">(local_address)</span></span>;<br>  echo_server<br>      .<span class="hljs-built_in">onHandle</span>([&amp;](falconlink::Connection* client_conn) &#123;<br>        <span class="hljs-type">int</span> from_fd = client_conn-&gt;<span class="hljs-built_in">fd</span>();<br>        <span class="hljs-keyword">auto</span> [read, exit] = client_conn-&gt;<span class="hljs-built_in">recv</span>();<br>        <span class="hljs-keyword">if</span> (exit) &#123;<br>          client_conn-&gt;<span class="hljs-built_in">getEventLoop</span>()-&gt;<span class="hljs-built_in">deleteConnection</span>(from_fd);<br>          <span class="hljs-comment">// client_conn ptr is invalid below here, do not touch it again</span><br>          <span class="hljs-keyword">return</span>;<br>        &#125;<br>        <span class="hljs-comment">// 只有以下四行是业务逻辑</span><br>        <span class="hljs-keyword">if</span> (read) &#123;<br>          client_conn-&gt;<span class="hljs-built_in">WriteToWriteBuffer</span>(client_conn-&gt;<span class="hljs-built_in">ReadAsString</span>());<br>          client_conn-&gt;<span class="hljs-built_in">send</span>();<br>          client_conn-&gt;<span class="hljs-built_in">clearReadBuffer</span>();<br>        &#125;<br>      <br>      &#125;)<br>      .<span class="hljs-built_in">start</span>();<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br></code></pre></td></tr></table></figure>
-<h2 id="build-test"><a class="markdownIt-Anchor" href="#build-test"></a> Build &amp; Test</h2>
-<p>将代码 clone 到本地，进入主目录</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs sh">sudo sh ./build_support/pachages.sh<br><br><span class="hljs-built_in">mkdir</span> build<br><span class="hljs-built_in">cd</span> build<br><br>cmake ..  <span class="hljs-comment"># Debug mode by default</span><br><span class="hljs-comment"># or </span><br>cmake -DCMAKE_BUILD_TYPE=Release .. <span class="hljs-comment"># to use release mode</span><br><br>make<br><br><span class="hljs-comment"># test</span><br>make build-tests<br>make <span class="hljs-built_in">test</span><br><br><span class="hljs-comment"># or you can test each file</span><br>make xxx_test<br>./test/xxx_test<br><br></code></pre></td></tr></table></figure>
-<h2 id="http-service"><a class="markdownIt-Anchor" href="#http-service"></a> http service</h2>
-<p>你可以进行使用 falconlink 搭建自己的 http 服务器。<br />
-在 <code>build</code> 目录下 <code>make http_server</code>，然后运行</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh">./bin/http_server [optional: port default=8090] [optional:directory <br>default=../examples/http_server/http_resource/]<br></code></pre></td></tr></table></figure>
-<p>你可以替换自行 <code>http_resource</code>中的文件，并在浏览器中输入 <code>localhost:&#123;port&#125;</code>查看</p>
-<h2 id="benchmark"><a class="markdownIt-Anchor" href="#benchmark"></a> Benchmark</h2>
-<p>使用 <code>webbench</code>进行压力测试</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">make benchmark<br></code></pre></td></tr></table></figure>
-<ul>
-<li>
-<p><strong>硬件</strong>:</p>
-<ul>
-<li>Intel® Xeon® Gold 6148 CPU @ 2.40GHz</li>
-<li>OS:Ubuntu 20.04 LTS,</li>
-<li>4 核 CPU， 16GiB内存， 100GiB磁盘存储。</li>
-</ul>
-</li>
-<li>
-<p><strong>QPS</strong>: <strong>40K</strong></p>
-</li>
-</ul>
+<p>在TSO下，对于上述表格中的问题，则可能出现 <code>x = 0, y = 0</code>的结果：<code>x = 1</code>与 <code>y = 1</code>都被放到store buffer上而未被flush到shared memory中。</p>
+<p>也就是说：<br />
+x86-TSO does not permit local reordering except of <strong>reads after writes to different addresses.</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs assemble">thread 1, thread 2    可能会     thread 1, thread 2<br>write a,  write b    ————————&gt;   read b,   read a<br>read b,   read a                 write a,  write b<br></code></pre></td></tr></table></figure>
+<p>要解决这个问题也很简单，在write后加上mfence指令即可，它会将store buffer中的存储刷到shared memory中。<br />
+这也是TSO比SC理论性能更高的原因，它舍弃了一定的正确性，来减少每次写操作都flush store buffer的开销。</p>
+<blockquote>
+<p>fun fact: intel和amd从没承认过他们的x86一定符合x86-tso内存模型，但是他们进行过黑盒测试，结果证明了这一点。（就连设计者都无法reason出理论上的结果，而是通过测试证明的）</p>
+</blockquote>
+<h3 id="arm-and-power"><a class="markdownIt-Anchor" href="#arm-and-power"></a> ARM and POWER</h3>
+<p>Arm and power则有着更加宽松的内存模型。<br />
+<img src="../img/memory-model/ARM-model.png" srcset="/img/loading.gif" lazyload alt="Arm-Model" /></p>
+<p>（待施工…</p>
+<h2 id="c-memory-order"><a class="markdownIt-Anchor" href="#c-memory-order"></a> C++ memory order</h2>
+<p>回到C++，标准提供的六种memory order就是从语言层面来约束最终希望达到的对程序被优化程度的限制。</p>
+<h3 id="应用"><a class="markdownIt-Anchor" href="#应用"></a> 应用</h3>
+<h4 id="refcounter"><a class="markdownIt-Anchor" href="#refcounter"></a> refcounter</h4>
+<h4 id="release-acuqire-model"><a class="markdownIt-Anchor" href="#release-acuqire-model"></a> release-acuqire model</h4>
 
             </div>
             <hr>
@@ -299,9 +338,9 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/ComputerNetwork/">ComputerNetwork</a>
+                      <a class="hover-with-bg" href="/tags/C-memory-order/">C++ memory order</a>
                     
-                      <a class="hover-with-bg" href="/tags/FalconLink/">FalconLink</a>
+                      <a class="hover-with-bg" href="/tags/Computer-Architecture/">Computer Architecture</a>
                     
                   </div>
                 
@@ -318,18 +357,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/C-CRTP/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">C++ CRTP</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/CMU15445-project3-Query-Execution/">
-                        <span class="hidden-mobile">CMU15445-project3 Query Excution</span>
+                      <a href="/parallel-hashmap/">
+                        <span class="hidden-mobile">parallel-hashmap</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

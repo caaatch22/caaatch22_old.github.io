@@ -6,7 +6,7 @@
   <link href="https://catch22.world/atom.xml" rel="self"/>
   
   <link href="https://catch22.world/"/>
-  <updated>2023-08-23T15:02:26.679Z</updated>
+  <updated>2023-09-11T14:10:04.309Z</updated>
   <id>https://catch22.world/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>C++内存模型 —— 现代Architecture的妥协</title>
+    <link href="https://catch22.world/C-%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B-%E2%80%94%E2%80%94-%E7%8E%B0%E4%BB%A3Architecture%E7%9A%84%E5%A6%A5%E5%8D%8F/"/>
+    <id>https://catch22.world/C-%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B-%E2%80%94%E2%80%94-%E7%8E%B0%E4%BB%A3Architecture%E7%9A%84%E5%A6%A5%E5%8D%8F/</id>
+    <published>2023-09-01T07:51:19.000Z</published>
+    <updated>2023-09-11T14:10:04.309Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;../img/memory-model/title-graph.png&quot; alt=&quot;一本简单介绍内存一致性的书&quot;</summary>
+        
+      
+    
+    
+    
+    
+    <category term="C++ memory order" scheme="https://catch22.world/tags/C-memory-order/"/>
+    
+    <category term="Computer Architecture" scheme="https://catch22.world/tags/Computer-Architecture/"/>
+    
+  </entry>
   
   <entry>
     <title>parallel-hashmap</title>
