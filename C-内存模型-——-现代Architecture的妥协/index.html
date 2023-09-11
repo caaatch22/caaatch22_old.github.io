@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://catch22.world/img/memory-model/title-graph.png">
 <meta property="article:published_time" content="2023-09-01T07:51:19.000Z">
-<meta property="article:modified_time" content="2023-09-11T15:14:10.599Z">
+<meta property="article:modified_time" content="2023-09-11T15:29:23.031Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="C++ memory order">
 <meta property="article:tag" content="Computer Architecture">
@@ -189,7 +189,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      4.8k 字
+      5.1k 字
     </span>
   
 
@@ -198,7 +198,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      27 分钟
+      29 分钟
     </span>
   
 
@@ -239,7 +239,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：几秒前
+                  本文最后更新于：2 分钟前
                 
               </p>
             
@@ -377,11 +377,23 @@ POWER架构还提供了一个额外的“轻量级同步”指令，称为<code>
 </tbody>
 </table>
 <p><img src="../img/memory-model/acquire-barrier.png" srcset="/img/loading.gif" lazyload alt="acuire barrier" /></p>
-<p>或许这么看还是有点抽象</p>
-<h3 id="应用"><a class="markdownIt-Anchor" href="#应用"></a> 应用</h3>
-<h4 id="refcounter"><a class="markdownIt-Anchor" href="#refcounter"></a> refcounter</h4>
-<h4 id="release-acuqire-model"><a class="markdownIt-Anchor" href="#release-acuqire-model"></a> release-acuqire model</h4>
-<h3 id="其他"><a class="markdownIt-Anchor" href="#其他"></a> 其他</h3>
+<p>在默认情况下，<code>std::atomic&lt;&gt;</code>相关函数总是选用<code>std::memory_order_seq_cst</code>，它能有效地帮我们避免错误。但是，我们既然都使用atomic而不是mutex了，自然是对性能有很高的要求。<br />
+<img src="../img/memory-model/memory-barriers-performance.png" srcset="/img/loading.gif" lazyload alt="memory barriers and performance" />，从上图中可以看出，<code>memory_order_relaxed</code>的行呢个和<code>non-atomic</code>几乎没有差别，而<code>seq_cst</code>则要慢许多。</p>
+<p>如果上面的表格看起来还是有点抽象，我们举几个常用的例子进行说明：</p>
+<h3 id="relax-model"><a class="markdownIt-Anchor" href="#relax-model"></a> relax-model</h3>
+<h3 id="release-acuqire-model"><a class="markdownIt-Anchor" href="#release-acuqire-model"></a> release-acuqire model</h3>
+<h2 id="其他"><a class="markdownIt-Anchor" href="#其他"></a> 其他</h2>
+<ol>
+<li>
+<p>你可能已经注意到了，X86-TSO内存模型非常严格，它已经为我们提供了</p>
+<ul>
+<li>all load are acquire-loads, all stores are release-stores</li>
+<li>all read-modify-write operations are acquire-release<br />
+也就是说x86平台下不存在真正的memory-order-relexed</li>
+</ul>
+</li>
+<li></li>
+</ol>
 <p>关于 <code>std::atomic&lt;&gt;</code>，</p>
 
             </div>
