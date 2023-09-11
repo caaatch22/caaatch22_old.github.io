@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://catch22.world/img/memory-model/title-graph.png">
 <meta property="article:published_time" content="2023-09-01T07:51:19.000Z">
-<meta property="article:modified_time" content="2023-09-11T14:41:52.610Z">
+<meta property="article:modified_time" content="2023-09-11T15:14:10.599Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="C++ memory order">
 <meta property="article:tag" content="Computer Architecture">
@@ -189,7 +189,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      3.7k 字
+      4.8k 字
     </span>
   
 
@@ -198,7 +198,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      21 分钟
+      27 分钟
     </span>
   
 
@@ -239,7 +239,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：1 分钟前
+                  本文最后更新于：几秒前
                 
               </p>
             
@@ -322,8 +322,26 @@ x86-TSO does not permit local reordering except of <strong>reads after writes to
 <h3 id="arm-and-power"><a class="markdownIt-Anchor" href="#arm-and-power"></a> ARM and POWER</h3>
 <p>Arm and power则有着更加宽松的内存模型。为了理解这样一台机器的行为，我们可以认为每个hardware thread都拥有自己的内存副本，如下图所示。所有内存副本和它们的interconnection（即除了线程以外的一切）的集合通常被称为<em>storage subsystem</em>。一个线程的写操作可能以<strong>任何顺序</strong>传播到其他线程，并且不同地址的写操作的传播可以任意交错，除非它们受到屏障或缓存一致性的限制。也可以将屏障视为从执行它们的硬件线程传播到每个其他线程的操作。<br />
 <img src="../img/memory-model/ARM-model.png" srcset="/img/loading.gif" lazyload alt="Arm-Model" /></p>
+<p>由于每个线程都有自己的子存储系统，它们之间的同步就需要fence进行保障。ARM和POWER提供了barrier(fence)指令(分别是<code>dbm</code> 和 <code>sync</code>)来约束下面几种顺序：</p>
+<ol>
+<li>Read/Read之间fence:保证他们按照program<br />
+order执行</li>
+<li>Read/Write屏障: 确保在写操作被提交（因此传播并对其他人可见）之前，读操作被满足并提交。</li>
+<li>Write/Write屏障：确保第一个写操作在第二个写操作被提交之前被提交并传播到所有其他线程。</li>
+<li>Write/Read屏障：确保在读操作被满足之前，写操作已被提交并传播到所有其他线程。<br />
+POWER架构还提供了一个额外的“轻量级同步”指令，称为<code>lwsync</code>，它比sync指令更弱，也因此可能更快。具体作用不在此处赘述。</li>
+</ol>
+<p>除了屏障之外，这些体系结构还提供以下依赖关系来强制顺序：</p>
+<ul>
+<li>Address dependency：当第一条指令读取的值用于计算第二条指令的地址时，从一个读操作到程序顺序后的读或写之间存在地址依赖。</li>
+<li>Control dependency：当第一条指令读取的值用于计算在第二条指令之前的程序顺序条件分支的条件时，从一个读操作到程序顺序后的读/写之间存在控制依赖。</li>
+<li>Data dependency：当第一条指令读取的值用于计算由第二条指令写入的值时，从一个读操作到程序顺序后的写之间存在数据依赖。</li>
+</ul>
+<p>在ARM和POWER处理器中，read-to-read的control dependency力度较小，因为它们可以在条件分支之前进行推测性执行，从而在第一次读取之前满足第二次读取。为了增加read-to-Read的控制依赖的影响力，可以在条件分支和第二次读取之间添加一个ISB（ARM）或isync（POWER）指令。<br />
+相反，read-to-write的control dependency具有一定的影响力：在分支被提交之前，写操作不会被其他任何线程看到，因此也不会在第一次读取的值固定之前被看到。<br />
+总结一下，从一个读取到另一个读取，如果存在address dependency 或带有 ISB/isync 的控制依赖，将阻止第二个读取在第一个读取之前被满足，而纯粹的control dependency则不会。从读取到写入，地址、控制或数据依赖都将阻止写入在读取的值固定之前对任何其他线程可见。</p>
 <h2 id="c-memory-order"><a class="markdownIt-Anchor" href="#c-memory-order"></a> C++ memory order</h2>
-<p>回到C++，标准提供的六种memory order就是从语言层面来约束最终希望达到的对程序被优化程度的限制。现在我们再看这集中memory order就比较清晰了。</p>
+<p>对于<code>weak memory model</code>，特别是上面介绍的Arm的内存模型，想要精细的控制程序的允许重排的程度需要非常大的心智负担。（光是不同体系结构，不同等级的fence指令就令人望而却步）。因此C++11标准提供的六种memory order就是从语言层面来约束最终希望达到的对程序被优化程度的限制。现在我们再看这几种memory order就比较清晰了。（以下说法并不严谨，但是作为程序员的take away完全足够了。</p>
 <table>
 <thead>
 <tr>
@@ -338,7 +356,7 @@ x86-TSO does not permit local reordering except of <strong>reads after writes to
 </tr>
 <tr>
 <td>memory_order_consume</td>
-<td>(只用于读) 后面依赖此原子变量的访存指令不允许重排至此条指令之前。 注意，当前标准中的memory_order_consume是<a target="_blank" rel="noopener" href="https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0371r0.html%E6%89%80%E4%BB%A5%E4%B8%8D%E8%A6%81%E4%BD%BF%E7%94%A8">没有实际用处的</a></td>
+<td>(只用于读) 后面依赖此原子变量的访存指令不允许重排至此条指令之前。 注意，当前标准中的memory_order_consume是<a target="_blank" rel="noopener" href="https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0371r0.html%E6%89%80%E4%BB%A5%E4%B8%8D%E8%A6%81%E4%BD%BF%E7%94%A8">没有实际用处的</a>， 一般情况下不要使用</td>
 </tr>
 <tr>
 <td>memory_order_acuqire</td>
@@ -358,10 +376,13 @@ x86-TSO does not permit local reordering except of <strong>reads after writes to
 </tr>
 </tbody>
 </table>
-<p>以上说法并不严谨，但是作为程序员的take away完全足够了。</p>
+<p><img src="../img/memory-model/acquire-barrier.png" srcset="/img/loading.gif" lazyload alt="acuire barrier" /></p>
+<p>或许这么看还是有点抽象</p>
 <h3 id="应用"><a class="markdownIt-Anchor" href="#应用"></a> 应用</h3>
 <h4 id="refcounter"><a class="markdownIt-Anchor" href="#refcounter"></a> refcounter</h4>
 <h4 id="release-acuqire-model"><a class="markdownIt-Anchor" href="#release-acuqire-model"></a> release-acuqire model</h4>
+<h3 id="其他"><a class="markdownIt-Anchor" href="#其他"></a> 其他</h3>
+<p>关于 <code>std::atomic&lt;&gt;</code>，</p>
 
             </div>
             <hr>
