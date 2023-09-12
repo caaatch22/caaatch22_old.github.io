@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://catch22.world/img/memory-model/title-graph.png">
 <meta property="article:published_time" content="2023-09-01T07:51:19.000Z">
-<meta property="article:modified_time" content="2023-09-11T16:22:40.487Z">
+<meta property="article:modified_time" content="2023-09-12T15:39:51.420Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="C++ memory order">
 <meta property="article:tag" content="Computer Architecture">
@@ -239,7 +239,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：几秒前
+                  本文最后更新于：2 分钟前
                 
               </p>
             
@@ -391,6 +391,7 @@ POWER架构还提供了一个额外的“轻量级同步”指令，称为<code>
 <img src="../img/memory-model/acquire-release-protocal.png" srcset="/img/loading.gif" lazyload alt="acuqire-release protocal" /></p>
 <p>我们用一个非常简单的spinlock作为例子：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">spinlock</span> &#123;<br> <span class="hljs-keyword">public</span>:<br>  <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">lock</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">while</span>(flg_.<span class="hljs-built_in">exchang</span>(<span class="hljs-number">1</span>, std::memory_order_acquire))<br>        ;<br>  &#125;<br>  <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">unlock</span><span class="hljs-params">()</span> </span>&#123; flg_.<span class="hljs-built_in">store</span>(<span class="hljs-number">0</span>, std::memory_order_release); &#125;<br> <span class="hljs-keyword">private</span>:<br>  std::atomic&lt;<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span>&gt; flg_;<br>&#125;;<br><br>cretical section<br><br></code></pre></td></tr></table></figure>
+<p>(…待施工)</p>
 <h2 id="其他"><a class="markdownIt-Anchor" href="#其他"></a> 其他</h2>
 <ol>
 <li>
