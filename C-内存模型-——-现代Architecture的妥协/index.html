@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://catch22.world/img/memory-model/title-graph.png">
 <meta property="article:published_time" content="2023-09-01T07:51:19.000Z">
-<meta property="article:modified_time" content="2023-09-12T15:42:59.149Z">
+<meta property="article:modified_time" content="2023-09-13T13:18:37.696Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="C++ memory order">
 <meta property="article:tag" content="Computer Architecture">
@@ -189,7 +189,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      5.9k 字
+      6.8k 字
     </span>
   
 
@@ -198,7 +198,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      33 分钟
+      38 分钟
     </span>
   
 
@@ -281,9 +281,9 @@ answer: l1: 1ns, l2: 5ns, l3: 50~100ns, main memory: 200ns</p>
 </thead>
 <tbody>
 <tr>
-<td>x = 1 <br> y’ = y</td>
-<td>y = 1 <br> x’ = x</td>
-<td>x = 0 <br> y = 0 <br> Spawn thread 1, 2 <br> Wait for threads</td>
+<td>x = 1<code>&lt;br&gt;</code> y’ = y</td>
+<td>y = 1<code>&lt;br&gt;</code> x’ = x</td>
+<td>x = 0<code>&lt;br&gt;</code> y = 0 <code>&lt;br&gt;</code> Spawn thread 1, 2 <code>&lt;br&gt;</code> Wait for threads</td>
 </tr>
 </tbody>
 </table>
@@ -318,14 +318,14 @@ x86-TSO does not permit local reordering <strong>except of reads after writes to
 <h3 id="arm-and-power"><a class="markdownIt-Anchor" href="#arm-and-power"></a> ARM and POWER</h3>
 <p>Arm and power则有着更加宽松的内存模型。为了理解这样一台机器的行为，我们可以认为每个hardware thread都拥有自己的内存副本，如下图所示。所有内存副本和它们的interconnection（即除了线程以外的一切）的集合通常被称为<em>storage subsystem</em>。一个线程的写操作可能以<strong>任何顺序</strong>传播到其他线程，并且不同地址的写操作的传播可以任意交错，除非它们受到屏障或缓存一致性的限制。也可以将屏障视为从执行它们的硬件线程传播到每个其他线程的操作。<br />
 <img src="../img/memory-model/ARM-model.png" srcset="/img/loading.gif" lazyload alt="Arm-Model" /></p>
-<p>由于每个线程都有自己的子存储系统，它们之间的同步就需要fence进行保障。ARM和POWER提供了barrier(fence)指令(分别是<code>dbm</code> 和 <code>sync</code>)来约束下面几种顺序：</p>
+<p>由于每个线程都有自己的子存储系统，它们之间的同步就需要fence进行保障。ARM和POWER提供了barrier(fence)指令(分别是 <code>dbm</code> 和 <code>sync</code>)来约束下面几种顺序：</p>
 <ol>
 <li>Read/Read之间fence:保证他们按照program<br />
 order执行</li>
 <li>Read/Write屏障: 确保在写操作被提交（因此传播并对其他人可见）之前，读操作被满足并提交。</li>
 <li>Write/Write屏障：确保第一个写操作在第二个写操作被提交之前被提交并传播到所有其他线程。</li>
 <li>Write/Read屏障：确保在读操作被满足之前，写操作已被提交并传播到所有其他线程。<br />
-POWER架构还提供了一个额外的“轻量级同步”指令，称为<code>lwsync</code>，它比sync指令更弱，也因此可能更快。具体作用不在此处赘述。</li>
+POWER架构还提供了一个额外的“轻量级同步”指令，称为 <code>lwsync</code>，它比sync指令更弱，也因此可能更快。具体作用不在此处赘述。</li>
 </ol>
 <p>除了屏障之外，这些体系结构还提供以下依赖关系来强制顺序：</p>
 <ul>
@@ -337,7 +337,7 @@ POWER架构还提供了一个额外的“轻量级同步”指令，称为<code>
 相反，read-to-write的control dependency具有一定的影响力：在分支被提交之前，写操作不会被其他任何线程看到，因此也不会在第一次读取的值固定之前被看到。<br />
 总结一下，从一个读取到另一个读取，如果存在address dependency 或带有 ISB/isync 的控制依赖，将阻止第二个读取在第一个读取之前被满足，而纯粹的control dependency则不会。从读取到写入，地址、控制或数据依赖都将阻止写入在读取的值固定之前对任何其他线程可见。</p>
 <h2 id="c-memory-order"><a class="markdownIt-Anchor" href="#c-memory-order"></a> C++ memory order</h2>
-<p>对于<code>weak memory model</code>，特别是上面介绍的Arm的内存模型，想要精细的控制程序的允许重排的程度需要非常大的心智负担。（光是不同体系结构，不同等级的fence指令就令人望而却步）。因此C++11标准提供的六种memory order就是从语言层面来约束最终希望达到的对程序被优化程度的限制。现在我们再看这几种memory order就比较清晰了。（以下说法并不严谨，但是作为程序员的take away完全足够了。</p>
+<p>对于 <code>weak memory model</code>，特别是上面介绍的ARM的内存模型，想要精细的控制程序的允许重排的程度需要非常大的心智负担。（光是不同体系结构，不同等级的fence指令就令人望而却步）。因此C++11标准提供的六种memory order就是从语言层面来约束最终希望达到的对程序被优化程度的限制。现在我们再看这几种memory order就比较清晰了。（以下说法并不严谨，但是作为程序员的take away完全足够了。</p>
 <table>
 <thead>
 <tr>
@@ -372,37 +372,59 @@ POWER架构还提供了一个额外的“轻量级同步”指令，称为<code>
 </tr>
 </tbody>
 </table>
-<p><img src="../img/memory-model/acquire-barrier.png" srcset="/img/loading.gif" lazyload alt="acuire barrier" /></p>
-<p>在默认情况下，<code>std::atomic&lt;&gt;</code>相关函数总是选用<code>std::memory_order_seq_cst</code>，它能有效地帮我们避免错误。但是，我们既然都使用atomic而不是mutex了，自然是对性能有很高的要求。<br />
-<img src="../img/memory-model/memory-barriers-performance.png" srcset="/img/loading.gif" lazyload alt="memory barriers and performance" />，从上图中可以看出，<code>memory_order_relaxed</code>的行呢个和<code>non-atomic</code>几乎没有差别，而<code>seq_cst</code>则要慢许多。</p>
-<p>另一方面，使用不同等级的memory order也能更好的表达你的程序的意图：</p>
-<h3 id="relax-model"><a class="markdownIt-Anchor" href="#relax-model"></a> relax-model</h3>
+<!-- ![acuire barrier](../img/memory-model/acquire-barrier.png) -->
+<p>在默认情况下，<code>std::atomic&lt;&gt;</code>相关函数总是选用 <code>std::memory_order_seq_cst</code>，它能有效地帮我们避免错误。但是，我们既然都使用 <code>atomic</code>而不是 <code>mutex</code>了，自然是对性能有较高要求。<br />
+<img src="../img/memory-model/memory-barriers-performance.png" srcset="/img/loading.gif" lazyload alt="memory barriers and performance" /> 从上图中可以看出，<code>memory_order_relaxed</code>的行呢个和 <code>non-atomic</code>几乎没有差别，而 <code>seq_cst</code>则要慢许多。</p>
+<p>另一方面，使用不同等级的 <code>memory order</code>也能更好的表达你的代码的意图：</p>
+<h3 id="relaxed-model"><a class="markdownIt-Anchor" href="#relaxed-model"></a> relaxed-model</h3>
 <p>最典型的例子就是一个线程安全的计数器。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp">std::atomic&lt;<span class="hljs-type">size_t</span>&gt; counter;<br>counter.<span class="hljs-built_in">fetch_add</span>(<span class="hljs-number">1</span>, std::memory_order_relaxed);<br></code></pre></td></tr></table></figure>
 <p>你只是单纯的记录某件事情发生了几次。常用的还有智能指针中的引用计数的递增递减等</p>
 <h3 id="acuqire-release-model"><a class="markdownIt-Anchor" href="#acuqire-release-model"></a> acuqire-release model</h3>
 <p>如果代码改成：<code>counter.fetch_add(1, std::memory_order_release);</code>那么这个counter就极有可能是某个数组的下标：你对某一个数组append了一个数，然后你才将其<strong>release(发布)</strong>，告诉系统不允许将你对数组的append操作重排到counter增加之后；这样在其他线程中，其他线程就无法因为counter没更新而占有你已经append的位置。</p>
-<p>acuqire-release经常成对出现，因为他们共同表示了这样的一个模型：<br />
-<img src="../img/memory-model/acquire-release-protocal.png" srcset="/img/loading.gif" lazyload alt="acuqire-release protocal" /></p>
-<p>我们用一个非常简单的spinlock作为例子：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">spinlock</span> &#123;<br> <span class="hljs-keyword">public</span>:<br>  <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">lock</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">while</span>(flg_.<span class="hljs-built_in">exchang</span>(<span class="hljs-number">1</span>, std::memory_order_acquire))<br>        ;<br>  &#125;<br>  <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">unlock</span><span class="hljs-params">()</span> </span>&#123; flg_.<span class="hljs-built_in">store</span>(<span class="hljs-number">0</span>, std::memory_order_release); &#125;<br> <span class="hljs-keyword">private</span>:<br>  std::atomic&lt;<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span>&gt; flg_;<br>&#125;;<br><br>cretical section<br><br></code></pre></td></tr></table></figure>
-<p>(…待施工)</p>
+<p>acuqire-release 经常成对出现，因为他们共同表示了这样的一个模型：<br />
+<img src="../img/memory-model/acquire-release-protocal.gif" srcset="/img/loading.gif" lazyload alt="acuqire-release protocal" /></p>
+<p>图中 <code>&#123;a, b&#125;</code>是我们需要在不同线程之间同步的值，那么线程1准备好 <code>&#123;a, b&#125;</code>后，<strong>release(发布) x</strong>，即 <code>x.store(1, memory_order_release)</code>，这时我们保证了 <code>&#123;a, b&#125;</code>值的更新一定是 <code>x = 1</code>的时候可见的（因为{a, b}的更新操作不会被重排到x.store之后）；那么在读线程，我们就可以根据 x 判断 <code>&#123;a, b&#125;</code>是否被更新:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">while</span>(x.<span class="hljs-built_in">load</span>(memory_order_acquire) != <span class="hljs-number">1</span>)<br>  ;<br>  [a<span class="hljs-number">&#x27;</span>, b<span class="hljs-number">&#x27;</span>] = &#123;a, b&#125;;  <span class="hljs-comment">// acuire语义保证了这句话不会被重排到x.load之前</span><br></code></pre></td></tr></table></figure>
+<p>还有就是acq_sel_model了，这三种模型就是我们用std::atomic最常用的三种memory order.</p>
 <h2 id="其他"><a class="markdownIt-Anchor" href="#其他"></a> 其他</h2>
 <ol>
-<li>
-<p>你可能已经注意到了，X86-TSO内存模型非常严格，它已经为我们提供了</p>
+<li>你可能已经注意到了，X86-TSO内存模型非常严格，它已经为我们提供了
 <ul>
 <li>all load are acquire-loads, all stores are release-stores</li>
-<li>all read-modify-write operations are acquire-release<br />
-也就是说x86平台下不存在真正的memory-order-relexed</li>
+<li>all read-modify-write operations are acquire-release</li>
 </ul>
 </li>
+</ol>
+<p><strong>也就是说x86平台下不存在真正的memory-order-relexed</strong></p>
+<ol start="2">
+<li>为什么<code>atomic&lt;&gt;</code>比<code>mutex</code>更高效？最终不都是依赖于硬件提供的 barrier 以及 CAS, test and set等low level primitive吗？</li>
+</ol>
+<ul>
+<li><strong>atomic 做的事情</strong>：原子指令修改内存，内存栅栏保障修改可见，<em>必要时锁总线</em>。</li>
+<li><strong>mutex 大致做的事情</strong>：短暂原子 CAS(compare and set) 自旋如果未成功上锁，futex(&amp;lock, FUTEX_WAIT… ) 退避进入阻塞等待直到 lock 值变化时唤醒。futex 在设计上期望做到如果无争用，则可以不进内核态，<strong>不进内核态的 fast path 的开销等价于 atomic 判断</strong>。内核里维护按地址维护一张 wait queue 的哈希表，发现锁变量值的变化（解锁）时，唤醒对应的 wait queue 中的一个 task。wait queue 这个哈希表的槽在更新时也会遭遇争用，这时继续通过 spin lock 保护。<br />
+<img src="../img/memory-model/futex.png" srcset="/img/loading.gif" lazyload alt="futex" /></li>
+</ul>
+<p>说白了就是mutex会陷入内核态（大部分情况下），而内核使用比较复杂的算法维护锁</p>
+<ol start="3">
 <li></li>
 </ol>
-<p><code>std::atomic&lt;&gt;</code>一定是无锁的吗？<strong>wrong!</strong></p>
-<ol start="3">
-<li>为什么atomic&lt;&gt;比mutex更高效？最终不都是依赖于硬件提供的barrier以及CAS, test and set等low level primitive吗？</li>
-</ol>
+<p><code>std::atomic&lt;&gt;</code>一定是无锁的吗？</p>
+<p><strong>wrong!</strong></p>
+<p>举个例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-type">long</span> x;<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">A</span> &#123;<span class="hljs-type">long</span> x;&#125;<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">B</span> &#123;<span class="hljs-type">long</span> x; <span class="hljs-type">long</span> y;&#125;<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">C</span> &#123;<span class="hljs-type">long</span> x; <span class="hljs-type">long</span> y; <span class="hljs-type">long</span> z;&#125;<br></code></pre></td></tr></table></figure>
+<p>那么atomic<T>， T取x, A, B, C的时候哪些是lock-free，哪些不是呢？</p>
+<p>我们可以用std::atomic<T>::is_lock_free()找出答案。上述选项中，T = x, A的时候一定是lock_free的，T = C的时候一定不是lock_free的。</p>
+<blockquote>
+<p>C++17提供std::is_always_lock_free可以在编译器进行判断，如果为false不代表一定是 no lock_free的</p>
+</blockquote>
+<h3 id="reference"><a class="markdownIt-Anchor" href="#reference"></a> reference</h3>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=ZQFzMfHIxng&amp;t=896s&amp;ab_channel=CppCon">介绍atomic的talk，比较全面</a></li>
+<li><a target="_blank" rel="noopener" href="https://herbsutter.com/2013/02/11/atomic-weapons-the-c-memory-model-and-modern-hardware/">Sutter的talk, atomic weapons</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1803.04432.pdf">Memory Models for C/C++ Programmers</a></li>
+<li></li>
+</ul>
 
             </div>
             <hr>
